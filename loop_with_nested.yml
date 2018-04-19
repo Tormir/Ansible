@@ -1,0 +1,16 @@
+#ansible-playbook createDirectory.yml -e "host=<host_ip>"
+- hosts: "{{ host | default('none')}}" #
+  #remote_user: root
+  vars:
+    names:
+      - Alice
+      - Andrew
+      - Chris
+  tasks:
+    - name: Create dirs
+      shell: echo '"{{ item[0] }}" "{{ item[1] }}"'
+      register: out
+      with_nested:
+        - "{{ names }}"
+        - [ 'rides the bike', 'have wonderful friends' ]
+    - debug: var=out.results

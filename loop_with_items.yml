@@ -1,0 +1,26 @@
+#ansible-playbook loop_with_items.yml -e "host=<host_ip>"
+- hosts: "{{ host | default('none')}}" #
+  remote_user: root
+  vars:
+    directories:
+      - /root/pycharmPython
+      - /root/pycharmPython/configs
+    users:
+      - name: Andre
+        telephone: 123-456-789
+      - name: Patric
+        telephone: 987-654-321
+  tasks:
+    - name: Create dirs
+      file:
+        path: "{{ item }}"
+        owner: root
+        group: root
+        mode: 0744
+        state: directory
+      with_items:
+        "{{ directories }}"
+    - name: Print users
+      debug:
+        msg: "{{ item.name }} {{ item.telephone }}"
+      with_items: "{{ users }}"
